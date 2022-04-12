@@ -11,10 +11,10 @@ use MQTT;
 
 function executeMqtt()
 {
-    $server   = 'broker.emqx.io';
+    $server   = '127.0.0.1';
     $port     = 1883;
     $clientId = rand(5, 15);
-    $username = 'emqx_user';
+    $username = 'mosquitto_user';
     $password = null;
     $clean_session = false;
   
@@ -22,8 +22,8 @@ function executeMqtt()
     $connectionSettings
     ->setUsername($username)
     ->setPassword(null)
-    ->setKeepAliveInterval(1)
-    ->setLastWillTopic('emqx/test/last-will')
+    ->setKeepAliveInterval(60)
+    ->setLastWillTopic('mosquitto/topic/last-will')
     ->setLastWillMessage('client disconnect')
     ->setLastWillQualityOfService(1);
   
@@ -33,7 +33,7 @@ function executeMqtt()
     $mqtt->connect($connectionSettings, $clean_session);
     printf("Cliente conectado\n");
   
-    $mqtt->subscribe('emqx/test', function ($topic, $message) {
+    $mqtt->subscribe('mosquitto/topic', function ($topic, $message) {
         $url = "http://localhost:8000/mqttData";
         $curl = new curlPost($url);
         $curl->curlPostJson($message);
@@ -45,7 +45,7 @@ function executeMqtt()
     );
         $mqtt->publish(
       // topic
-      'emqx/test',
+      'mosquitto/topic',
       // payload
       json_encode($payload),
       // qos
