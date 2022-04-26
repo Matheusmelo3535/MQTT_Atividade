@@ -56,8 +56,7 @@ function executeMqtt()
         printf("msg $i send\n");
         sleep(1);
     }
-  
     $mqtt->loop(true);
+    
 }
-
 executeMqtt();
